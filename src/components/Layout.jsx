@@ -21,7 +21,7 @@ export default function Layout({ children }) {
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white">
       <Navbar toggleTheme={toggleTheme} theme={theme} />
 
-      <main className="flex-1 pt-24">
+      <main className="pt-24">
         {children}
       </main>
 
