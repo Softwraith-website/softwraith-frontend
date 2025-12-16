@@ -3,62 +3,56 @@ import logo from "../assets/logo.png";
 
 export default function Navbar({ toggleTheme, theme }) {
   const base =
-    "relative text-sm font-medium transition-colors duration-200";
+    "text-sm font-medium transition relative";
 
-  const inactive =
-    "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white";
+  const normal =
+    "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white";
 
   const active =
-    "text-black dark:text-white after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:bg-black dark:after:bg-white after:rounded-full";
+    "text-black dark:text-white after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-blue-600";
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800">
+    <nav className="fixed top-0 w-full bg-white/90 dark:bg-black/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 z-50">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Softwraith Logo" className="h-8 w-auto" />
-          <span className="font-semibold tracking-tight text-lg text-black dark:text-white">
-            Softwraith
-          </span>
+          <img src={logo} alt="Softwraith" className="h-8 w-auto" />
+          <span className="font-semibold text-lg">Softwraith</span>
         </NavLink>
 
-        {/* Center Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Links */}
+        <div className="flex items-center gap-6">
           {[
-            { name: "Home", path: "/" },
-            { name: "Services", path: "/services" },
-            { name: "Training", path: "/training" },
-            { name: "About", path: "/about" },
-            { name: "Contact", path: "/contact" },
-          ].map((item) => (
+            { path: "/", label: "Home" },
+            { path: "/about", label: "About" },
+            { path: "/services", label: "Services" },
+            { path: "/training", label: "Training" },
+            { path: "/contact", label: "Contact" },
+          ].map(link => (
             <NavLink
-              key={item.name}
-              to={item.path}
-              end={item.path === "/"}
+              key={link.path}
+              to={link.path}
               className={({ isActive }) =>
-                `${base} ${isActive ? active : inactive}`
+                `${base} ${isActive ? active : normal}`
               }
             >
-              {item.name}
+              {link.label}
             </NavLink>
           ))}
-        </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-4">
-          {/* Theme Toggle */}
+          {/* Theme */}
           <button
             onClick={toggleTheme}
-            className="text-xs px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition"
+            className="ml-4 px-3 py-1 text-xs rounded border border-gray-300 dark:border-gray-700"
           >
             {theme === "light" ? "Dark" : "Light"}
           </button>
 
-          {/* Login CTA */}
+          {/* CTA */}
           <NavLink
             to="/login"
-            className="px-5 py-1.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-xs font-semibold hover:opacity-90 transition"
+            className="ml-2 bg-black text-white dark:bg-white dark:text-black px-4 py-1.5 rounded-full text-xs font-semibold"
           >
             Login
           </NavLink>
