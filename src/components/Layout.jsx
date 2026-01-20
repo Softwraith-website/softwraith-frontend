@@ -1,30 +1,14 @@
-import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./footer";
 
-export default function Layout({ children }) {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
-
+export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white">
-      <Navbar toggleTheme={toggleTheme} theme={theme} />
-
-      <main className="pt-24">
-        {children}
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1 pt-24">
+        <Outlet />
       </main>
-
       <Footer />
     </div>
   );

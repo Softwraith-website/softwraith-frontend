@@ -41,7 +41,95 @@ const trainings = [
     duration: "Ongoing",
     audience: "College Students",
   },
+
+  // 🔽 NEW SOFTWRAITH COURSES (ADDED — SAME UI)
+
+  {
+    title: "Advanced Java",
+    description:
+      "In-depth Java training covering OOP, collections, multithreading, JDBC, and enterprise-level application development.",
+    duration: "8–10 Weeks",
+    audience: "Intermediate to Advanced Learners",
+  },
+  {
+    title: "AutoCAD",
+    description:
+      "Comprehensive AutoCAD training focused on 2D drafting, design principles, and industry-standard workflows.",
+    duration: "6 Weeks",
+    audience: "Engineering & Design Students",
+  },
+  {
+    title: "AWS",
+    description:
+      "Practical cloud training covering AWS core services, cloud architecture, deployment, and real-world use cases.",
+    duration: "6–8 Weeks",
+    audience: "IT & Cloud Aspirants",
+  },
+  {
+    title: "Biotechnology",
+    description:
+      "Applied biotechnology training focusing on modern lab techniques, industry applications, and research fundamentals.",
+    duration: "8 Weeks",
+    audience: "Biotech & Life Science Students",
+  },
+  {
+    title: "Drone Technology",
+    description:
+      "Hands-on drone technology program covering UAV fundamentals, design, controls, and real-world applications.",
+    duration: "6–8 Weeks",
+    audience: "Engineering Students",
+  },
+  {
+    title: "Data Structures and Algorithms (DSA)",
+    description:
+      "Strong foundation in problem-solving using data structures, algorithms, and competitive programming techniques.",
+    duration: "10–12 Weeks",
+    audience: "Students & Job Seekers",
+  },
+  {
+    title: "Electric Vehicle Design",
+    description:
+      "EV-focused training covering vehicle architecture, battery systems, power electronics, and design principles.",
+    duration: "8–10 Weeks",
+    audience: "Mechanical & Electrical Engineers",
+  },
+  {
+    title: "Industry Automation",
+    description:
+      "Training on industrial automation concepts including PLCs, SCADA, sensors, and smart manufacturing systems.",
+    duration: "8 Weeks",
+    audience: "Industrial & Electrical Engineers",
+  },
+  {
+    title: "Machine Learning",
+    description:
+      "Advanced machine learning training covering supervised, unsupervised learning, and real-world AI projects.",
+    duration: "10 Weeks",
+    audience: "CS & AI Enthusiasts",
+  },
+  {
+    title: "Robotics",
+    description:
+      "Robotics training focusing on kinematics, sensors, controllers, and hands-on robotic system development.",
+    duration: "8 Weeks",
+    audience: "Engineering Students",
+  },
+  {
+    title: "SolidWorks",
+    description:
+      "Professional SolidWorks training covering 3D modeling, assemblies, and product design workflows.",
+    duration: "6 Weeks",
+    audience: "Mechanical & Design Students",
+  },
+  {
+    title: "STAAD Pro",
+    description:
+      "Structural analysis and design training using STAAD Pro for real-world civil engineering applications.",
+    duration: "6 Weeks",
+    audience: "Civil Engineering Students",
+  },
 ];
+
 
 export default function Training() {
   return (
