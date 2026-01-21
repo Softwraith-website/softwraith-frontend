@@ -29,6 +29,9 @@ const Navbar = () => {
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Softwraith" className="h-8" />
+          <span className="text-lg font-semibold text-gray-900 tracking-tight">
+    Softwraith
+  </span>
         </Link>
 
         {/* NAV LINKS */}
