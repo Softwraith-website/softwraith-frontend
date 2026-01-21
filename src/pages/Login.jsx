@@ -148,11 +148,14 @@ const Login = () => {
               {/* REAL GOOGLE LOGIN */}
               <div className="mt-4 flex justify-center">
                 <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setError("Google login failed")}
-                  theme="outline"
-                  size="large"
-                />
+  onSuccess={(credentialResponse) => {
+    console.log(credentialResponse);
+  }}
+  onError={() => {
+    console.log("Google Login Failed");
+  }}
+/>
+
               </div>
 
               <p className="mt-6 text-sm text-center text-gray-600">
