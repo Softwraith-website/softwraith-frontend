@@ -1,26 +1,15 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { User, LogOut } from "lucide-react";
 import logo from "../../assets/logo.png";
+import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
+  const [hovered, setHovered] = useState(null);
 
-  // Load user from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/login");
-  };
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white border-b border-gray-200">
@@ -28,19 +17,47 @@ const Navbar = () => {
 
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Softwraith" className="h-8" />
+          <img src={logo} alt="Softwraith" className="h-12 w-auto" />
           <span className="text-lg font-semibold text-gray-900 tracking-tight">
-    Softwraith
-  </span>
+            Softwraith
+          </span>
         </Link>
 
         {/* NAV LINKS */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
-          <NavLink to="/" className="hover:text-gray-900">Home</NavLink>
-          <NavLink to="/services" className="hover:text-gray-900">Services</NavLink>
-          <NavLink to="/about" className="hover:text-gray-900">About</NavLink>
-          <NavLink to="/contact" className="hover:text-gray-900">Contact</NavLink>
-        </nav>
+       <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+  {[
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: "Training", path: "/training" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ].map((item) => (
+    <NavLink
+      key={item.name}
+      to={item.path}
+      onMouseEnter={() => setHovered(item.name)}
+      onMouseLeave={() => setHovered(null)}
+      className={({ isActive }) => {
+        const showUnderline =
+          hovered === item.name || (!hovered && isActive);
+
+        return `
+          relative text-gray-700 transition-colors duration-150
+          hover:text-gray-900
+          after:content-[''] after:absolute after:left-0 after:-bottom-1
+          after:h-[2px] after:w-full after:bg-blue-600
+          after:origin-left after:transition-transform after:duration-80
+          ${showUnderline ? "after:scale-x-100" : "after:scale-x-0"}
+        `;
+      }}
+    >
+      {item.name}
+    </NavLink>
+  ))}
+</nav>
+
+
+
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-4">
@@ -84,7 +101,10 @@ const Navbar = () => {
                 </button>
 
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    logout();
+                    navigate("/login");
+                  }}
                   className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50 flex items-center gap-2"
                 >
                   <LogOut size={16} />

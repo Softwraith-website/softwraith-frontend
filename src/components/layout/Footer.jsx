@@ -49,7 +49,7 @@ const Footer = () => {
           </h4>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>Email: softwraith.solutions@gmail.com</li>
-            <li>Location:📍Noida</li>
+            <li>Location:📍PPE-102, Peach Palm E, Omaxe Palm Green, Greater Noida</li>
           </ul>
         </div>
 

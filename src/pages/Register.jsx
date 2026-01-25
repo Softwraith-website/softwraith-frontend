@@ -3,7 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
+
 import AuthSuccess from "../components/ui/AuthSuccess";
+import { useAuth } from "../context/AuthContext";
+
 import authIllustration from "../assets/auth-register.svg";
 import logo from "../assets/logo.png";
 
@@ -14,13 +17,17 @@ const floatAnimation = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
+  // -------------------------
+  // EMAIL / PASSWORD REGISTER
+  // -------------------------
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.name || !form.email || !form.password) {
@@ -28,43 +35,42 @@ const Register = () => {
       return;
     }
 
-    setError("");
-    // existing email/password register backend logic
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/google`,
+        `${import.meta.env.VITE_API_URL}/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token: credentialResponse.credential,
-          }),
+          body: JSON.stringify(form),
         }
       );
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Registration failed");
 
-      if (!res.ok) {
-        throw new Error(data.message || "Google signup failed");
-      }
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // Save user globally
+      login(data.user, data.token);
 
       setSuccess(true);
 
-      setTimeout(() => navigate("/dashboard"), 1200);
+      // Redirect to homepage
+      setTimeout(() => navigate("/"), 1200);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Something went wrong");
     }
+  };
+
+  // -------------------------
+  // GOOGLE SIGNUP (UI ONLY)
+  // -------------------------
+  const handleGoogleSuccess = () => {
+    setError(
+      "Google signup will be enabled once backend OAuth is finalized."
+    );
   };
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gray-50">
-
       {/* LEFT — FORM */}
       <motion.div
         initial={{ opacity: 0, x: -24 }}
@@ -73,7 +79,6 @@ const Register = () => {
         className="flex items-center justify-center px-6"
       >
         <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 p-8 shadow-sm">
-
           {/* LOGO */}
           <div className="flex justify-center mb-4">
             <img src={logo} alt="Softwraith" className="h-8" />
@@ -104,7 +109,6 @@ const Register = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
-
                 <input
                   placeholder="Name"
                   value={form.name}
@@ -116,6 +120,7 @@ const Register = () => {
 
                 <input
                   placeholder="Email"
+                  type="email"
                   value={form.email}
                   onChange={(e) =>
                     setForm({ ...form, email: e.target.value })
@@ -147,13 +152,11 @@ const Register = () => {
                 </button>
               </form>
 
-              {/* REAL GOOGLE SIGNUP */}
+              {/* GOOGLE SIGNUP (SAFE MODE) */}
               <div className="mt-4 flex justify-center">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={() => setError("Google signup failed")}
-                  theme="outline"
-                  size="large"
                 />
               </div>
 
@@ -183,7 +186,6 @@ const Register = () => {
           </p>
         </motion.div>
       </div>
-
     </div>
   );
 };

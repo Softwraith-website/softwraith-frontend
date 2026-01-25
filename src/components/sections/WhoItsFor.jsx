@@ -1,85 +1,94 @@
 import { motion } from "framer-motion";
-import { fadeUp, staggerContainer } from "../../motion/variants";
-import { GraduationCap, Building2, Briefcase } from "lucide-react";
+import { fadeUp } from "../../motion/variants";
 
-const audiences = [
+import studentsImg from "../../assets/student-training.jpg";
+import companiesImg from "../../assets/companies-software.jpg";
+import professionalsImg from "../../assets/professionals-upskilling.jpg";
+
+const sections = [
   {
+    eyebrow: "INDUSTRY-ALIGNED TRAINING",
     title: "Students",
     description:
-      "Industry-aligned training with real projects and career-focused outcomes.",
-    icon: GraduationCap,
+      "Hands-on training with real-world projects, mentorship, and career-focused outcomes designed to prepare students for modern tech roles.",
+    image: studentsImg,
+    reverse: false,
   },
   {
+    eyebrow: "RELIABLE SOFTWARE & IT SOLUTIONS",
     title: "Companies",
     description:
-      "Reliable software solutions built with clarity, accountability, and scalability.",
-    icon: Building2,
+      "We build scalable software solutions and deliver dependable IT services with clarity, accountability, and long-term business impact.",
+    image: companiesImg,
+    reverse: true, // 👈 TEXT LEFT, IMAGE RIGHT
   },
   {
+    eyebrow: "CAREER ADVANCEMENT",
     title: "Professionals",
     description:
-      "Upskilling and guidance to stay relevant in fast-moving technical roles.",
-    icon: Briefcase,
+      "Upskilling programs and expert guidance to help professionals stay relevant in fast-evolving technical and leadership roles.",
+    image: professionalsImg,
+    reverse: false,
   },
 ];
 
 const WhoItsFor = () => {
   return (
-    <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ amount: 0.25 }}
-      className="bg-gray-50 py-16 md:py-24"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section className="bg-white py-24">
+      <div className="max-w-7xl mx-auto px-6 space-y-28">
 
-        <motion.div variants={fadeUp} className="max-w-2xl mb-12 md:mb-14">
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900">
-            Built for real-world impact
-          </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            We work with people and teams who care about building and growing the right way.
-          </p>
-        </motion.div>
+        {sections.map((item, index) => (
+          <motion.div
+            key={index}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center"
+          >
+            {/* TEXT */}
+            <div
+              className={`max-w-xl ${
+                item.reverse ? "md:order-1" : "md:order-2"
+              }`}
+            >
+              <p className="text-sm tracking-widest text-gray-500 uppercase mb-3">
+                {item.eyebrow}
+              </p>
 
-        <motion.div
-          variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
-        >
-          {audiences.map((item, index) => {
-            const Icon = item.icon;
+              <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-5">
+                {item.title}
+              </h3>
 
-            return (
-              <motion.div
-                key={index}
-                variants={fadeUp}
+              <p className="text-lg text-gray-600 leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+
+            {/* IMAGE */}
+            <div
+              className={`flex ${
+                item.reverse
+                  ? "md:order-2 justify-end"
+                  : "md:order-1 justify-start"
+              }`}
+            >
+              <img
+                src={item.image}
+                alt={item.title}
                 className="
-                  group relative bg-white rounded-xl border border-gray-200
-                  p-6 md:p-8 transition-all duration-300
-                  hover:-translate-y-1 hover:shadow-md
-                  hover:border-gray-900 hover:border-l-4
+                  w-full max-w-lg
+                  rounded-2xl
+                  object-cover
+                  shadow-[0_24px_48px_rgba(0,0,0,0.12)]
                 "
-              >
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-gray-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                <div className="relative mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 group-hover:bg-gray-200 transition">
-                  <Icon className="h-5 w-5 text-gray-700" />
-                </div>
-
-                <h3 className="relative text-xl font-semibold text-gray-900 mb-3">
-                  {item.title}
-                </h3>
-
-                <p className="relative text-gray-600 leading-relaxed">
-                  {item.description}
-                </p>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              />
+            </div>
+          </motion.div>
+        ))}
 
       </div>
-    </motion.section>
+    </section>
   );
 };
 
