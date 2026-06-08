@@ -51,11 +51,30 @@ const Login = () => {
     }
   };
 
-  // ---------------- GOOGLE LOGIN (SAFE MODE) ----------------
-  const handleGoogleSuccess = () => {
-    setError(
-      "Google login will be enabled once backend OAuth is fully configured."
-    );
+  // ---------------- GOOGLE LOGIN ----------------
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const { data } = await api.post("/auth/google", {
+        token: credentialResponse.credential,
+      });
+
+      // Save user globally
+      login(data.user, data.token);
+
+      // Redirect to admin dashboard if admin, else homepage
+      navigate(data.user.role === "admin" ? "/admin" : "/");
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Google authentication failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
