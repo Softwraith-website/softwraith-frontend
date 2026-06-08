@@ -1,4 +1,3 @@
-import shailendra from "../assets/director-shailendra.jpg";
 import meena from "../assets/director-meena.jpg";
 
 export default function About() {
@@ -32,23 +31,6 @@ export default function About() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 max-w-4xl">
-            {/* Director 1 */}
-            <div className="flex items-center gap-6">
-              <img
-                src={shailendra}
-                alt="Shailendra Singh Chauhan"
-                className="w-24 h-24 rounded-full object-cover border border-gray-200 dark:border-gray-800"
-              />
-
-              <div>
-                <h3 className="text-xl font-semibold text-black dark:text-white">
-                  Shailendra Singh Chauhan
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Director
-                </p>
-              </div>
-            </div>
 
             {/* Director 2 */}
             <div className="flex items-center gap-6">
