@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../utils/api";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -7,7 +8,7 @@ export default function Contact() {
     message: "",
   });
 
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState({ type: "", message: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,27 +16,17 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus("Sending...");
+    setStatus({ type: "info", message: "Sending..." });
 
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setStatus("Message sent successfully");
-        setForm({ name: "", email: "", message: "" });
-      } else {
-        setStatus(data.message || "Something went wrong");
-      }
+      await api.post("/contact", form);
+      setStatus({ type: "success", message: "Message sent successfully!" });
+      setForm({ name: "", email: "", message: "" });
     } catch (err) {
-      setStatus("Server error");
+      setStatus({
+        type: "error",
+        message: err.response?.data?.message || "Server error. Please try again."
+      });
     }
   };
 
@@ -45,8 +36,7 @@ export default function Contact() {
       <section className="max-w-7xl mx-auto px-6 py-24">
         <h1 className="text-4xl font-semibold mb-4">Contact Us</h1>
         <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-          Reach out to Softwraith Solutions for services, training, or
-          collaboration.
+          Reach out to Softwraith Solutions for services, training, or collaboration.
         </p>
       </section>
 
@@ -94,10 +84,18 @@ export default function Contact() {
             Send Message
           </button>
 
-          {status && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {status}
-            </p>
+          {status.message && (
+            <div
+              className={`p-3.5 border rounded-xl text-sm font-medium animate-fadeIn ${
+                status.type === "success"
+                  ? "bg-green-50 border-green-200 text-green-800"
+                  : status.type === "error"
+                  ? "bg-red-50 border-red-200 text-red-800"
+                  : "bg-blue-50 border-blue-200 text-blue-800"
+              }`}
+            >
+              {status.message}
+            </div>
           )}
         </form>
 

@@ -1,4 +1,3 @@
-import Layout from "../components/Layout";
 import shailendra from "../assets/director-shailendra.jpg";
 import meena from "../assets/director-meena.jpg";
 

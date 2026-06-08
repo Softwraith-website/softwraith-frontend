@@ -6,6 +6,7 @@ import { GoogleLogin } from "@react-oauth/google";
 
 import AuthSuccess from "../components/ui/AuthSuccess";
 import { useAuth } from "../context/AuthContext";
+import api from "../utils/api";
 
 import authIllustration from "../assets/auth-register.svg";
 import logo from "../assets/logo.png";
@@ -35,38 +36,39 @@ const Register = () => {
       return;
     }
 
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        }
-      );
+      const { data } = await api.post("/auth/register", form);
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
-      // Save user globally
       login(data.user, data.token);
 
       setSuccess(true);
-
-      // Redirect to homepage
       setTimeout(() => navigate("/"), 1200);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     }
   };
 
   // -------------------------
-  // GOOGLE SIGNUP (UI ONLY)
+  // GOOGLE SIGNUP
   // -------------------------
-  const handleGoogleSuccess = () => {
-    setError(
-      "Google signup will be enabled once backend OAuth is finalized."
-    );
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setError("");
+      const { data } = await api.post("/auth/google", {
+        token: credentialResponse.credential,
+      });
+
+      login(data.user, data.token);
+      setSuccess(true);
+      setTimeout(() => navigate(data.user.role === "admin" ? "/admin" : "/"), 1200);
+    } catch (err) {
+      setError(err.response?.data?.message || "Google signup failed");
+    }
   };
 
   return (
@@ -132,6 +134,7 @@ const Register = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
+                    minLength={8}
                     value={form.password}
                     onChange={(e) =>
                       setForm({ ...form, password: e.target.value })

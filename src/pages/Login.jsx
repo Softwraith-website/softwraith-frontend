@@ -8,6 +8,7 @@ import authIllustration from "../assets/auth-login.svg";
 import logo from "../assets/logo.png";
 
 import { useAuth } from "../context/AuthContext";
+import api from "../utils/api";
 
 const floatAnimation = {
   animate: { y: [0, -10, 0] },
@@ -36,17 +37,7 @@ const Login = () => {
       setLoading(true);
       setError("");
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        }
-      );
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
+      const { data } = await api.post("/auth/login", form);
 
       // Save user globally
       login(data.user, data.token);
@@ -54,7 +45,7 @@ const Login = () => {
       // Redirect to homepage (dashboard visible there)
       navigate("/");
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -136,6 +127,12 @@ const Login = () => {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
+            </div>
+
+            <div className="flex justify-end text-xs">
+              <Link to="/forgot-password" className="text-gray-600 hover:text-gray-900 hover:underline">
+                Forgot password?
+              </Link>
             </div>
 
             <button
