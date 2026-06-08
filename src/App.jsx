@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Layout from "./components/Layout";
 import AdminRoute from "./components/AdminRoute";
 import Spinner from "./components/ui/Spinner";
@@ -81,6 +82,7 @@ export default function App() {
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Analytics />
     </Suspense>
   );
 }
