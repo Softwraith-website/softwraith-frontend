@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Shield, ShieldOff, Trash2, Search, SlidersHorizontal, Eye } from "lucide-react";
+import { Shield, ShieldOff, Trash2, Search, SlidersHorizontal, Eye, UserX, UserCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
-export default function UserTable({ users, onToggleRole, onDeleteUser }) {
+export default function UserTable({ users, onToggleRole, onToggleStatus, onDeleteUser }) {
   const { user: currentUser } = useAuth();
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
@@ -60,6 +60,7 @@ export default function UserTable({ users, onToggleRole, onDeleteUser }) {
                 <th className="p-4 pl-6">Profile</th>
                 <th className="p-4">Email</th>
                 <th className="p-4">Role</th>
+                <th className="p-4">Status</th>
                 <th className="p-4">Joined Date</th>
                 <th className="p-4">Courses Enrolled</th>
                 <th className="p-4 pr-6 text-right">Actions</th>
@@ -98,6 +99,17 @@ export default function UserTable({ users, onToggleRole, onDeleteUser }) {
                         }
                       `}>
                         {u.role === "admin" ? "Admin" : "Student"}
+                      </span>
+                    </td>
+
+                    <td className="p-4">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border
+                        ${u.status === "suspended"
+                          ? "bg-red-50 text-red-700 border-red-200"
+                          : "bg-green-50 text-green-700 border-green-200"
+                        }
+                      `}>
+                        {u.status === "suspended" ? "Suspended" : "Active"}
                       </span>
                     </td>
 
@@ -170,12 +182,27 @@ export default function UserTable({ users, onToggleRole, onDeleteUser }) {
                           {u.role === "admin" ? <ShieldOff className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
                         </button>
                         
+                        {/* Toggle Status */}
+                        <button
+                          disabled={isSelf}
+                          onClick={() => onToggleStatus(u)}
+                          title={isSelf ? "You cannot suspend your own account." : u.status === "suspended" ? "Activate User" : "Suspend User"}
+                          className={`p-1.5 rounded-lg border bg-white transition
+                            ${u.status === "suspended"
+                              ? "border-green-200 text-green-600 hover:border-green-500 hover:text-green-700"
+                              : "border-gray-200 text-gray-400 hover:border-red-500 hover:text-red-650"
+                            }
+                          `}
+                        >
+                          {u.status === "suspended" ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
+                        </button>
+
                         {/* Delete User */}
                         <button
                           disabled={isSelf}
                           onClick={() => onDeleteUser(u)}
                           title={isSelf ? "You cannot delete your own account." : "Delete User"}
-                          className="p-1.5 rounded-lg border border-gray-200 hover:border-red-500 hover:text-red-600 bg-white text-gray-400 disabled:opacity-30 disabled:hover:border-gray-200 disabled:hover:text-gray-400 transition"
+                          className="p-1.5 rounded-lg border border-gray-200 hover:border-red-500 hover:text-red-650 bg-white text-gray-400 disabled:opacity-30 disabled:hover:border-gray-200 disabled:hover:text-gray-400 transition"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

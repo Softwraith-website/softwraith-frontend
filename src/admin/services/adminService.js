@@ -70,6 +70,11 @@ const adminService = {
     return data;
   },
 
+  toggleUserStatus: async (id) => {
+    const { data } = await api.put(`/admin/users/${id}/status`);
+    return data;
+  },
+
   deleteUser: async (id) => {
     const { data } = await api.delete(`/admin/users/${id}`);
     return data;

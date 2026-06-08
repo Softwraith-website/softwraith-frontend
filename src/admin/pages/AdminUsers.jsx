@@ -47,6 +47,22 @@ export default function AdminUsers() {
     }
   };
 
+  const handleToggleStatus = async (targetUser) => {
+    try {
+      const updatedUser = await adminService.toggleUserStatus(targetUser._id);
+      setUsers((prev) =>
+        prev.map((u) => (u._id === targetUser._id ? { ...u, status: updatedUser.status } : u))
+      );
+      setMsg(
+        `User ${targetUser.name} has been ${
+          updatedUser.status === "suspended" ? "suspended" : "activated"
+        } successfully.`
+      );
+    } catch (err) {
+      setMsg(err.response?.data?.message || "Failed to update user suspension status.");
+    }
+  };
+
   const handleDeleteUser = async (targetUser) => {
     if (!confirm(`Are you sure you want to delete student "${targetUser.name}"? This removes all active course enrollments and service tickets associated with this email.`)) return;
     try {
@@ -102,6 +118,7 @@ export default function AdminUsers() {
         <UserTable
           users={users}
           onToggleRole={handleToggleRole}
+          onToggleStatus={handleToggleStatus}
           onDeleteUser={handleDeleteUser}
         />
       )}

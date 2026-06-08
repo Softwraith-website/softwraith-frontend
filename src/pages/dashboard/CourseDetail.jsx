@@ -78,7 +78,11 @@ export default function CourseDetail() {
       
       // Open download URL
       const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-      window.open(`${apiBase}/certificates/download/${cert._id}`, "_blank");
+      const token = localStorage.getItem("token");
+      window.open(
+        `${apiBase}/certificates/download/${cert._id}?token=${encodeURIComponent(token)}`,
+        "_blank"
+      );
     } catch (err) {
       console.error("Certificate generation error:", err);
       alert(err.response?.data?.message || "Failed to generate certificate");

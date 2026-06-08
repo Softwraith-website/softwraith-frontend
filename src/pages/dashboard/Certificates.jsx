@@ -27,7 +27,11 @@ export default function Certificates() {
     try {
       setDownloadingId(certId);
       const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-      window.open(`${apiBase}/certificates/download/${certId}`, "_blank");
+      const token = localStorage.getItem("token");
+      window.open(
+        `${apiBase}/certificates/download/${certId}?token=${encodeURIComponent(token)}`,
+        "_blank"
+      );
     } catch (err) {
       console.error(err);
       alert("Failed to download certificate");
