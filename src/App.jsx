@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import Layout from "./components/Layout";
 import AdminRoute from "./components/AdminRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
+import GuestOnlyRoute from "./components/GuestOnlyRoute";
 import Spinner from "./components/ui/Spinner";
 
 // Public pages
@@ -35,15 +37,15 @@ const AdminContacts = lazy(() => import("./admin/pages/AdminContacts"));
 const AdminServices = lazy(() => import("./admin/pages/AdminServices"));
 const AdminPayments = lazy(() => import("./admin/pages/AdminPayments"));
 
+const PageSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <Spinner size="lg" />
+  </div>
+);
+
 export default function App() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <Spinner size="lg" />
-        </div>
-      }
-    >
+    <Suspense fallback={<PageSpinner />}>
       <Routes>
         {/* Public site */}
         <Route element={<Layout />}>
@@ -56,16 +58,16 @@ export default function App() {
           <Route path="/courses/:id" element={<CourseDetailPublic />} />
         </Route>
 
-        {/* Auth */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        {/* Auth — redirect logged-in users to dashboard */}
+        <Route path="/login" element={<GuestOnlyRoute><Login /></GuestOnlyRoute>} />
+        <Route path="/register" element={<GuestOnlyRoute><Register /></GuestOnlyRoute>} />
+        <Route path="/forgot-password" element={<GuestOnlyRoute><ForgotPassword /></GuestOnlyRoute>} />
+        <Route path="/reset-password/:token" element={<GuestOnlyRoute><ResetPassword /></GuestOnlyRoute>} />
 
-        {/* User Dashboard */}
-        <Route path="/dashboard/*" element={<Dashboard />} />
+        {/* User Dashboard — protected */}
+        <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
-        {/* Admin Dashboard */}
+        {/* Admin Dashboard — protected + admin role check */}
         <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
           <Route index element={<AdminOverview />} />
           <Route path="courses" element={<AdminCourses />} />
