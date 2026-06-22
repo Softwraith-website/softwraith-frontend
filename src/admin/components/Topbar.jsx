@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, ChevronDown, User, LogOut, Settings } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Topbar({ setSidebarOpen, onLogout }) {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Helper to map paths to human-readable titles
@@ -93,8 +94,7 @@ export default function Topbar({ setSidebarOpen, onLogout }) {
               <button
                 onClick={() => {
                   setDropdownOpen(false);
-                  // Direct to dashboard or main portal settings
-                  window.location.href = "/dashboard";
+                  navigate("/dashboard");
                 }}
                 className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-gray-700 transition"
               >
@@ -102,11 +102,13 @@ export default function Topbar({ setSidebarOpen, onLogout }) {
                 Student Portal
               </button>
               <button
-                disabled
-                className="w-full text-left px-4 py-2 text-gray-400 flex items-center gap-2 cursor-not-allowed"
-                title="Coming soon"
+                onClick={() => {
+                  setDropdownOpen(false);
+                  navigate("/dashboard");
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-gray-700 transition"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-4 h-4 text-gray-400" />
                 Settings
               </button>
               <div className="border-t border-gray-100 my-1.5" />
