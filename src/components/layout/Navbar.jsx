@@ -2,7 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { User, LogOut, Menu, X } from "lucide-react";
 import logo from "../../assets/logo.png";
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -18,6 +18,57 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const [hovered, setHovered] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const closeTimeout = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+    }
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    closeTimeout.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 150);
+  };
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Close dropdown on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeout.current) {
+        clearTimeout(closeTimeout.current);
+      }
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -80,25 +131,51 @@ const Navbar = () => {
               </NavLink>
             </div>
           ) : (
-            <div className="relative group hidden md:block">
-              <div className="flex items-center gap-2 cursor-pointer">
+            <div
+              ref={dropdownRef}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="relative hidden md:block"
+            >
+              <button
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                aria-haspopup="menu"
+                aria-expanded={isDropdownOpen}
+                className="flex items-center gap-2 cursor-pointer focus:outline-none"
+              >
                 <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
                   <User className="h-5 w-5 text-gray-700" />
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-gray-800">
                   {user.name}
                 </span>
-              </div>
-              <div className="absolute right-0 mt-3 w-40 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
+              </button>
+              <div
+                role="menu"
+                aria-label="User menu"
+                className={`absolute right-0 mt-3 w-40 bg-white border border-gray-200 rounded-lg shadow-sm transition-all duration-200 ${
+                  isDropdownOpen
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                }`}
+              >
                 <button
-                  onClick={() => navigate(user.role === "admin" ? "/admin" : "/dashboard")}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50"
+                  role="menuitem"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    navigate(user.role === "admin" ? "/admin" : "/dashboard");
+                  }}
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-55 rounded-t-lg transition-colors"
                 >
                   Dashboard
                 </button>
                 <button
-                  onClick={handleLogout}
-                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50 flex items-center gap-2"
+                  role="menuitem"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-55 flex items-center gap-2 rounded-b-lg transition-colors"
                 >
                   <LogOut size={16} />
                   Logout
