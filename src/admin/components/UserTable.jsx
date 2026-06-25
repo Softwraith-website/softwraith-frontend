@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Shield, ShieldOff, Trash2, Search, SlidersHorizontal, Eye, UserX, UserCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -172,6 +173,15 @@ export default function UserTable({ users, onToggleRole, onToggleStatus, onDelet
 
                     <td className="p-4 pr-6 text-right">
                       <div className="inline-flex items-center gap-2">
+                        {/* View Detail */}
+                        <Link
+                          to={`/admin/users/${u._id}`}
+                          title="View user detail"
+                          className="p-1.5 rounded-lg border border-gray-200 hover:border-indigo-500 hover:text-indigo-600 bg-white text-gray-400 transition"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Link>
+
                         {/* Toggle Role */}
                         <button
                           disabled={isSelf}

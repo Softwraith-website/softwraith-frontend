@@ -32,6 +32,7 @@ const AdminCourseCreate = lazy(() => import("./admin/pages/AdminCourseCreate"));
 const AdminCourseEdit = lazy(() => import("./admin/pages/AdminCourseEdit"));
 const AdminCourseLectures = lazy(() => import("./admin/pages/AdminCourseLectures"));
 const AdminUsers = lazy(() => import("./admin/pages/AdminUsers"));
+const AdminUserDetail = lazy(() => import("./pages/admin/AdminUserDetail"));
 const AdminEnrollments = lazy(() => import("./admin/pages/AdminEnrollments"));
 const AdminContacts = lazy(() => import("./admin/pages/AdminContacts"));
 const AdminServices = lazy(() => import("./admin/pages/AdminServices"));
@@ -75,6 +76,7 @@ export default function App() {
           <Route path="courses/edit/:id" element={<AdminCourseEdit />} />
           <Route path="courses/:courseId/lectures" element={<AdminCourseLectures />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="users/:id" element={<AdminUserDetail />} />
           <Route path="enrollments" element={<AdminEnrollments />} />
           <Route path="contacts" element={<AdminContacts />} />
           <Route path="services" element={<AdminServices />} />

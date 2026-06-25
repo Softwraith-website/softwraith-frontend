@@ -12,6 +12,8 @@ import Services from "./Services";
 import CourseDetail from "./CourseDetail";
 import Certificates from "./Certificates";
 import PaymentHistory from "./PaymentHistory";
+import Profile from "./Profile";
+import ProfileEdit from "./ProfileEdit";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -104,6 +106,14 @@ export default function Dashboard() {
             Payments
           </NavLink>
 
+          <NavLink
+            to="/dashboard/profile"
+            className="sidebar-link"
+            onClick={() => setSidebarOpen(false)}
+          >
+            My Profile
+          </NavLink>
+
           {user.role === "admin" && (
             <NavLink
               to="/admin"
@@ -139,6 +149,8 @@ export default function Dashboard() {
           <Route path="services" element={<Services />} />
           <Route path="certificates" element={<Certificates />} />
           <Route path="payments" element={<PaymentHistory />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="profile/edit" element={<ProfileEdit />} />
 
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
